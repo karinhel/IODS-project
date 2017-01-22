@@ -1,0 +1,14 @@
+---
+title: "README.Rmd"
+output: html_document
+---
+
+Hey here's a nice distribution function just for you;)
+```{r, echo=FALSE}
+logjakauma <- function(x){1/(1+exp((-x+5)/2))}
+
+plot(logjakauma, -15, 20, ann=T, axes=F, col="blue")
+box()
+```
+
+My repository is: https://karinhel.github.io/IODS-project/
