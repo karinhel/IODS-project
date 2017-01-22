@@ -1,7 +1,8 @@
 
 # About the project
 
-*It's all about learning open data, open science and data science with R tools.*
+*It's all about learning open data, open science and data science with R tools.
+Testing and analysing!*
 
 
 My Github repository is: https://github.com/karinhel/IODS-project  (:
