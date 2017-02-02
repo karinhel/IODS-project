@@ -1,7 +1,84 @@
-# Insert chapter 2 title here
 
-*Describe the work you have done this week and summarize your learning.*
+# Chapter 2 - Linear regression analysis
 
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+
+Let's begin our analysis by opening the dataset that has been created previously. With the str()-prosedure we see that there are 7 variables of 166 observations. The data describes learning; deep is short for deep learning, stra for strategic learning and surf for surface learning.
+
+```{r, include=TRUE}
+students2014 <- read.table(file= "http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/learning2014.txt", header=T, sep=",")
+
+str(students2014)
+
+```
+
+Now that we have the dataset ready, we can start analysing by making some graphs and summaries.
+```{r}
+library(GGally)
+library(ggplot2)
+
+summary(students2014)
+
+
+```
+
+By using the function summary() we see important statistics of the variables in the data. Only "gender" is a dichotomous variable at the dataset, and all the other variables are continous. However, there are clear minimum and maximum points for each of the 7 variables.
+The relation between variables can easily be seen in the graph box of all the variables in the model.
+
+```{r}
+p <- ggpairs(students2014, mapping = aes(col=gender, alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
+
+p
+
+```
+
+We see that variables "attitude" and "points" have the biggest correlation in an absolute sense. It seems that there is not any great division for male and female observations of any variable. However, in general the distributions of variables for male observations are "lower" than distributions for female observations, but this can be due to the fact that there are also less male than female answers in the data.
+
+Let's fit a regression model with variables "attitude" "stra" and "surf" as explanatory variables for target variable exam points, "points". These explanatory variables have the greatest correlation with "points" and that is why they might form a valid regression model.
+
+```{r}
+the_model <- lm(points ~ attitude + stra + surf, data=students2014 )
+
+summary(the_model)
+
+```
+At the test statistic's coefficients part we see that only "attitude" has a significant-enough p-value (the last column).
+
+xxx
+
+So let's fit the model again with only the significant variable in p-value sense. 
+```{r}
+the_model <- lm(points ~ attitude, data=students2014 )
+
+summary(the_model)
+
+```
+
+explain the relationship between the chosen explanatory variables and the target variable (interpret the model parameters). Explain and interpret the multiple R squared of the model. (3 points)
+
+
+```{r}
+par(mfrow = c(2,2))
+plot(the_model, which=c(1, 2, 5))
+```
+
+
+
+Explain the assumptions of the model and interpret the validity of those assumptions based on the diagnostic plots.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
