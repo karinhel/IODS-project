@@ -58,7 +58,7 @@ explain the relationship between the chosen explanatory variables and the target
 
 ```{r}
 par(mfrow = c(2,2))
-plot(the_model, which=c(1, 2, 5))
+plot(the_model, which=c(1, 2, 5), col=students2014$gender)
 ```
 
 
