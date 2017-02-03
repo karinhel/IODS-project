@@ -57,18 +57,14 @@ The multiple R-squared tells us the R^2 value =0.21. This is rather small, becau
 
 Finally we can interpret the model results with some regression diagnostics plots.
 ```{r}
-par(mfrow = c(2,2))
 plot(the_model, which=c(1, 2, 5), col="orchid1")
 ```
 
+"Residuals vs fitted values"-plot shows if the residuals in the model have any non-linear patterns. Luckily there are only a few outliers, observations 145, 56, and 35, that could be removed. We can say that our linear model is a good option for these variables.
 
-For the linear regression model, there are three assuptions.
+With the "Normal Q-Q plot" we can interpret the normality of the residuals, that is the error term. With this model the observations follow quite kindly the line that is drawn in the graph. We can say that normality is approximately true.
 
-
-"Explain the assumptions of the model and interpret the validity of those assumptions based on the diagnostic plots."
-
-lineaarisuusoletus -> residuals
-
+"Residuals vs leverage"-plot tells us about "influential cases", which means it tells whether there are some observations that influence estimates too much and thus will have an effect on the regression line.
 
 
 
