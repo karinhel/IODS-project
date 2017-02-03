@@ -41,30 +41,33 @@ the_model <- lm(points ~ attitude + stra + surf, data=students2014 )
 summary(the_model)
 
 ```
-At the test statistic's coefficients part we see that only "attitude" has a significant-enough p-value (the last column).
-
-xxx
+At the test statistic's coefficients part we see that only "attitude" has a significant-enough p-value (the last column). In general, we now have a regression model Y= 11.01 + 3.40 x attitude + 0.85 x stra - 0.59 x surf.
 
 So let's fit the model again with only the significant variable in p-value sense. 
 ```{r}
 the_model <- lm(points ~ attitude, data=students2014 )
 
-summary(the_model)
+coef(the_model)
 
 ```
 
-explain the relationship between the chosen explanatory variables and the target variable (interpret the model parameters). Explain and interpret the multiple R squared of the model. (3 points)
+When counting coefficents of the new model, we get that the slope b_1=3.52546. It means that when there is a one-unit change in the explanatory variable X, that is "attitude", points increase by about 3.5 units.
 
+The multiple R-squared tells us the R^2 value =0.21. This is rather small, because it tells, that the explanatory variables only explain about 21% of the variance of the result variable, which is exam points. Adjusted R-squared value tells also about the poor explanation volume; when the number of explanatory variables is included at the review, only around 19% of Y's variance is explained.
 
+Finally we can interpret the model results with some regression diagnostics plots.
 ```{r}
 par(mfrow = c(2,2))
-plot(the_model, which=c(1, 2, 5), col=students2014$gender)
+plot(the_model, which=c(1, 2, 5), col="orchid1")
 ```
 
 
+For the linear regression model, there are three assuptions.
 
-Explain the assumptions of the model and interpret the validity of those assumptions based on the diagnostic plots.
 
+"Explain the assumptions of the model and interpret the validity of those assumptions based on the diagnostic plots."
+
+lineaarisuusoletus -> residuals
 
 
 
