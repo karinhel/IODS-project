@@ -51,6 +51,8 @@ colnames(math_por)
 #    So let's merge the other variables into just one.
 
 
+# (5)
+
 # create a new data frame with only the joined columns
 alc <- select(math_por, one_of(join_by))
 
@@ -78,10 +80,17 @@ for(column_name in notjoined_columns) {
   }
 }
 
+# (6)
+# We define a new column alc_use by combining weekday and weekend alcohol use;
+alc <- mutate(alc, alc_use = (Dalc + Walc) / 2)
+# ... And a new logical column 'high_use'
+alc <- mutate(alc, high_use = alc_use > 2)
+
+
 # Take a glimpse at the new combined data
 glimpse(alc)
 
-#We managed to (with the best help of Datacamp) merge our dataset into a form with 33
+# We've managed to (with the best help of Datacamp) merge our dataset into a form with 35
 #     variables only. From numeric variables we have the rounded average and from
 #     nominal variables we have the first answer of two same-named column vectors.
 

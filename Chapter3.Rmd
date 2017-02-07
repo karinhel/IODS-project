@@ -2,3 +2,55 @@
 # Chapter 3 ~ Logistic Regression
 
 
+Let's start working by opening the dataset with read.table -command and taking a look at the structure of it. The data has been previously merged from two different files.
+
+```{r}
+alc <- read.table(file= "http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/alc.txt ", header=T, sep=",")
+
+colnames(alc)
+
+```
+
+The data addresses alcohol consumptions among 15 to 22 aged students in math and portuguese language courses. The 33 variables that can be seen upon include questions about studying times, grades, other topics related to school, backround information about the person, his/her family and social status and finally alcohol spending on week days and weekends. There are two additional variables; "alc_use" and "high_use". Alc_use tells the average of week day and weekend alcohol consumption and high_use is a logical vector, which is true if alc_use is higher than two.
+
+At this chapter, the purpose is to study the relationship between four picked variables and the variable "hig_use". We now choose next four variables; 
+
+* "goout"      Going out with friends
+* "famrel"     Quality of family relationships
+* "studytime"  Weekly studytime in hours
+* "sex"        Obviously female/male
+
+to explain higher use of alcohol among the study group.
+
+```{r}
+
+```
+
+
+
+Next we will fit a model with these four variables as explanatory and high_use as the result variable.
+
+```{r}
+Log <- glm(high_use ~ goout + famrel + studytime + sex, data = alc, family = "binomial")
+
+summary(Log)
+
+```
+
+It seems that the explanatory variables aren't that bad. "goout" has at least a very significant p-value, because it is near to zero and also the other three variables have a significant enough p-values; 0.001, 0.005 and 0.004. 
+
+
+After the model has been fit we can count some OR-values for the parameters.
+
+
+Finally, after all fitting and counting it is possible to make some predictions with the fitted model.
+
+
+
+
+
+
+
+
+
+
