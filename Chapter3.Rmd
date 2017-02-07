@@ -28,12 +28,13 @@ First we study the relationships between single variables. By crosstabulation an
 library(tidyr);library(dplyr);library(ggplot2)
 
 ```
+
 ```{r}
 
 alc %>% group_by(high_use, sex) %>% summarise(count = n(), mean_goout=mean(goout), mean_famrel=mean(famrel), mean_studytime=mean(studytime))
 ```
 
-We see that when high_use is true, the mean of going out with friends is greater for both sex. For other two variables we have rather sex divided differencies than a division for false and true high_use values.
+We see that when high_use is true, the mean of going out with friends is greater for both sex. For other two variables we have rather sex divided differencies than a division for false and true high_use values. Here are also some bar graphs, that are merged into one picture with help of [this](http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/) page.
 
 ```{r, echo=F}
 # Multiple plot function
