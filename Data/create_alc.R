@@ -98,5 +98,5 @@ glimpse(alc)
 write.csv(alc, file="alc.csv")
 
 
-
+str(alc_use)
 

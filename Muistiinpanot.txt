@@ -1,0 +1,39 @@
+The response variable is log of odds:
+
+ln(odds)=ln(p/1-p)=a*x1 + b*x2 + ..+ z*xn
+
+difference between null/ residual deviance
+-> comparing the model to one that has only the intercept=null model
+-> wider gap the better
+
+-------------------------------------------------------------
+significance of categorical predictor in logistic regression
+
+- Usually, R excludes one level of the categorical and
+the coefficients denote the difference of each class to this
+reference class (or sometimes called baseline class) 
+
+- to see the reference in R: options("contrasts")
+
+- For each coefficient of every level of the categorical
+variable, a Wald test is performed to test whether
+the pairwise difference between the coefficient of
+the reference class and the other class is different from
+zero or not. This is what the z and p-values in 
+the regression table are.
+
+-------------------------------------------------------------
+Cross-validation --> assessing generalization
+
+-> binary: calculate the fraction of correctly classified obs
+	& proportion of incorrectly= error/penalty/loss 
+
+-------------------------------------------------------------
+Odds ratios
+
+-> the exp of the coeff.s can be interpret as ORs
+between: unit change - no change
+in the corresponding explanatory variable  
+
+
+

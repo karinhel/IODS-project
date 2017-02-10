@@ -15,26 +15,28 @@ The data addresses alcohol consumptions among 15 to 22 aged students in math and
 
 At this chapter, the purpose is to study the relationship between four picked variables and the variable "hig_use". We now choose next four variables; 
 
-* "goout"      Going out with friends
-* "famrel"     Quality of family relationships
-* "studytime"  Weekly studytime in hours
-* "sex"        Obviously female/male
+* "goout"      Going out with friends (scale numeric: 1 - very low ; 5 - very high)
+* "famrel"     Quality of family relationships (numeric: 1 - very bad ; 5 - excellent)
+* "studytime"  Weekly studytime in hours (numeric: 1 - <2 hours; 2 - 2 to 5 hours; 3 - 5 to 10 hours; 4 - >10 hours)
+* "sex"        binary: 'F' - female or 'M' - male
 
-to explain higher use of alcohol among the study group. One could predict that going out with friends is the best variable to explain alcohol consumption. Family relationships could have a small effect as well as the studytime. Maybe high_use would better explain the weekly studying time than other way around. Sex can have a bigger explanation power on high_use but not as big as the first variable "goout".
+to explain higher use of alcohol in the study group. One could predict that going out with friends will be the best to explain alcohol consumption. Family relationships could have a small effect as well as the studytime. Maybe, if it wasn't for high_use that we are trying to explain here, it probably would have been better trying to explain high_use's effect on the weekly studying time than other way around. However, sex could have a greater explanation power on high_use (than "famrel" or "studytime"), but not as great as the first variable "goout".
 
-First we study the relationships between single variables. By crosstabulation and grahps.
+First we study the relationships between single variables by crosstabulation and grahps. It seems that among those with high value on "goout" is also more true-values of high_use, which is not suprising. All in all the graphics do not show that mindblowing results and maybe one finds the crosstabulation being more appealing for interpretation.  
 
-```{r, echo=F}
+```{r, include=FALSE}
 library(tidyr);library(dplyr);library(ggplot2)
 
 ```
+
 
 ```{r}
 
 alc %>% group_by(high_use, sex) %>% summarise(count = n(), mean_goout=mean(goout), mean_famrel=mean(famrel), mean_studytime=mean(studytime))
 ```
 
-We see that when high_use is true, the mean of going out with friends is greater for both sex. For other two variables we have rather sex divided differencies than a division for false and true high_use values. Here are also some bar graphs, that are merged into one picture with help of [this](http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/) page.
+We see that when high_use is true, the mean of going out with friends is greater for both sex. For other two variables we have rather sex divided differencies than a division for false and true high_use values.
+Here are also bar plots about relationships between the result and explanatory variables, that are merged into one picture with help of [this](http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/) page.
 
 ```{r, echo=F}
 # Multiple plot function
@@ -106,12 +108,22 @@ summary(Log)
 
 ```
 
-It seems that the explanatory variables aren't that bad. "goout" has at least a very significant p-value, because it is near to zero and also the other three variables have a significant enough p-values; 0.001, 0.005 and 0.004. 
+In the results we see that the explanatory variables aren't that bad in p-value sense, at least. "goout" has at least a very significant p-value; it is basically zero. Also the other three variables have significant enough p-values; 0.001, 0.005 and 0.004.
+
+Interpreting the estimated coefficients is a bit more complex than in linear regression, because now we have a binary outcome variable. The backroud for this is that, to make our model linear, we need to fix it with some calculation. The logistic regression model is based on a logistic function and thus the result variable values are actually values of the link function. That is basically the log of odds. This results in the fact that coefficient values can be interpret as odds ratios when we take the exponential of a single coefficient.
+
+So, in the case of the fitted model we could say first of all, that the intercept tells again the level of the model. So that is the same for linear and logistic. But then the real coefficients. Generally, when we have a multiple regression model, we interpret the coeff.s to be the change in the outcome variable when there is a one-unit change in the explanatory variable in question. Also important thing is, that when we do this, we assume the other variables to be constant, in other words we eliminate the effect of any other variable in the interpretation.
+Now in our logistic regression with a dichotomous outcome, the fitted model tells how much more likely is it to have a true value of "high_use" than a false, when a single explanatory variable is in question and others are constant. So for example
+
+* when there is a one-unit change in variable "goout", so when the person goes out with friends (a unit) more, the odds for "high_use" to be true increases by 0.79.
+* When we interpret the binary variable "sex", we see that in the output, R is stating an estimate value for "sexM". This means that the value is actually for male observations when that is compared to female obs. So, for male participants it is 0.76 more likely to have a "true" of "high_use" than for female obs.
+
+In general R is now showing us the value of coeff. when we compare it to a controll group that R has selected automaticly and the real value of this coeff. is calculated: intercept - the value.
 
 
-After the model has been fit we can count OR-values and confidence intervals for the parameters.
+After the model has been fit we can calculate OR-values and confidence intervals for the parameters.
 
-```{r}
+```{r, message=FALSE}
 
 OR <- coef(Log) %>% exp
 
@@ -121,9 +133,10 @@ cbind(OR, CI)
 
 ```
 
+As said earlier, the odds ratios are exponentials of the coefficient values. For example the "goout" variable has an OR value of 2.214. For a one-unit change in "goout" it 2.214 more likely to have a "true" value of high_use than for the non-changed "goout" value. This means that when going out with friends -ratio increases, the alcohol consumption of the observed is over to times more likely to be higher. The odds ratio for "sexM" is also over two. For other two variables in the model the OR values are not that high. It seems that the OR-values and the fitted model correspond to the hypothesis that was made in the beginning.
 
 
-Finally, after all fitting and counting it is possible to make some predictions with the fitted model.
+Finally, after all fitting and counting it is possible to make some predictions with the fitted model. Here we tabulate the predicted values with values of "high_use". Also we can form a loss function, which tells us the average number of correctly classified observations. We get the result 0.24, which is quite low and is therefore a good result.
 
 ```{r}
 
@@ -145,16 +158,12 @@ table(high_use = alc$high_use, prediction = alc$prediction) %>% prop.table %>% a
 # define a loss function (mean prediction error)
 loss_func <- function(class, prob) {
   n_wrong <- abs(class - prob) > 0.5
-  mean(n_wrong)
+  mean(n_wrong)   
 }
 
 # call loss_func to compute the average number of wrong predictions in the (training) data
 loss_func(class = alc$high_use, prob = alc$probability)
 
 ```
-
-
-
-
 
 
