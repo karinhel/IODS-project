@@ -1,5 +1,5 @@
 
-# Chapter 3 ~ Logistic Regression
+# Chapter 3 - Logistic Regression
 
 
 Let's start working by opening the dataset with read.table -command and taking a look at the structure of it. The data has been previously merged from two different files.

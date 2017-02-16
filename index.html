@@ -142,7 +142,8 @@ $(document).ready(function () {
 <ul>
 <li><a href="#about-the-project">About the project</a></li>
 <li><a href="#chapter-2---linear-regression-analysis">Chapter 2 - Linear regression analysis</a></li>
-<li><a href="#chapter-3-logistic-regression">Chapter 3 ~ Logistic Regression</a></li>
+<li><a href="#chapter-3---logistic-regression">Chapter 3 - Logistic Regression</a></li>
+<li><a href="#chapter-4---classification-and-clustering">Chapter 4 - Classification and clustering</a></li>
 </ul>
 </div>
 
@@ -233,8 +234,8 @@ coef(the_model)</code></pre>
 <p>“Residuals vs leverage”-plot tells us about “influential cases”, which means it tells whether there are some observations that influence estimates too much and thus will have an effect on the regression line.</p>
 <hr />
 </div>
-<div id="chapter-3-logistic-regression" class="section level1">
-<h1>Chapter 3 ~ Logistic Regression</h1>
+<div id="chapter-3---logistic-regression" class="section level1">
+<h1>Chapter 3 - Logistic Regression</h1>
 <p>Let’s start working by opening the dataset with read.table -command and taking a look at the structure of it. The data has been previously merged from two different files.</p>
 <pre class="r"><code>alc &lt;- read.table(file= &quot;http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/alc.txt &quot;, header=T, sep=&quot;,&quot;)
 
@@ -354,6 +355,84 @@ loss_func &lt;- function(class, prob) {
 # call loss_func to compute the average number of wrong predictions in the (training) data
 loss_func(class = alc$high_use, prob = alc$probability)</code></pre>
 <pre><code>## [1] 0.2408377</code></pre>
+<hr />
+</div>
+<div id="chapter-4---classification-and-clustering" class="section level1">
+<h1>Chapter 4 - Classification and clustering</h1>
+<p>In this chapter we are going to explore one of R’s own data “Boston” of the package MASS. Description of data!</p>
+<pre class="r"><code>library(MASS)</code></pre>
+<pre><code>## 
+## Attaching package: 'MASS'</code></pre>
+<pre><code>## The following object is masked from 'package:dplyr':
+## 
+##     select</code></pre>
+<pre class="r"><code>data(&quot;Boston&quot;)
+
+dim(Boston)</code></pre>
+<pre><code>## [1] 506  14</code></pre>
+<pre class="r"><code>str(Boston)</code></pre>
+<pre><code>## 'data.frame':    506 obs. of  14 variables:
+##  $ crim   : num  0.00632 0.02731 0.02729 0.03237 0.06905 ...
+##  $ zn     : num  18 0 0 0 0 0 12.5 12.5 12.5 12.5 ...
+##  $ indus  : num  2.31 7.07 7.07 2.18 2.18 2.18 7.87 7.87 7.87 7.87 ...
+##  $ chas   : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ nox    : num  0.538 0.469 0.469 0.458 0.458 0.458 0.524 0.524 0.524 0.524 ...
+##  $ rm     : num  6.58 6.42 7.18 7 7.15 ...
+##  $ age    : num  65.2 78.9 61.1 45.8 54.2 58.7 66.6 96.1 100 85.9 ...
+##  $ dis    : num  4.09 4.97 4.97 6.06 6.06 ...
+##  $ rad    : int  1 2 2 3 3 3 5 5 5 5 ...
+##  $ tax    : num  296 242 242 222 222 222 311 311 311 311 ...
+##  $ ptratio: num  15.3 17.8 17.8 18.7 18.7 18.7 15.2 15.2 15.2 15.2 ...
+##  $ black  : num  397 397 393 395 397 ...
+##  $ lstat  : num  4.98 9.14 4.03 2.94 5.33 ...
+##  $ medv   : num  24 21.6 34.7 33.4 36.2 28.7 22.9 27.1 16.5 18.9 ...</code></pre>
+<pre class="r"><code>summary(Boston$age)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    2.90   45.02   77.50   68.57   94.07  100.00</code></pre>
+<pre class="r"><code>summary(Boston$crim)</code></pre>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+##  0.00632  0.08204  0.25650  3.61400  3.67700 88.98000</code></pre>
+<pre class="r"><code># some graphics</code></pre>
+<p>There are 506 observations of 14 variables. Interpretaton of the picked variables perusjoukko?</p>
+<p>graphical overview; summaries of the variables -&gt; Describe and interpret the outputs, commenting on the distributions of the variables and the relationships between them</p>
+<p>Before linear discriminant analysis we must scale the data and divide it to two subsets; test set and analysis set.</p>
+<pre class="r"><code>boston_scaled &lt;- scale(Boston)
+boston_scaled &lt;- as.data.frame(boston_scaled)
+
+summary(boston_scaled)</code></pre>
+<pre><code>##       crim                 zn               indus        
+##  Min.   :-0.419367   Min.   :-0.48724   Min.   :-1.5563  
+##  1st Qu.:-0.410563   1st Qu.:-0.48724   1st Qu.:-0.8668  
+##  Median :-0.390280   Median :-0.48724   Median :-0.2109  
+##  Mean   : 0.000000   Mean   : 0.00000   Mean   : 0.0000  
+##  3rd Qu.: 0.007389   3rd Qu.: 0.04872   3rd Qu.: 1.0150  
+##  Max.   : 9.924110   Max.   : 3.80047   Max.   : 2.4202  
+##       chas              nox                rm               age         
+##  Min.   :-0.2723   Min.   :-1.4644   Min.   :-3.8764   Min.   :-2.3331  
+##  1st Qu.:-0.2723   1st Qu.:-0.9121   1st Qu.:-0.5681   1st Qu.:-0.8366  
+##  Median :-0.2723   Median :-0.1441   Median :-0.1084   Median : 0.3171  
+##  Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.0000  
+##  3rd Qu.:-0.2723   3rd Qu.: 0.5981   3rd Qu.: 0.4823   3rd Qu.: 0.9059  
+##  Max.   : 3.6648   Max.   : 2.7296   Max.   : 3.5515   Max.   : 1.1164  
+##       dis               rad               tax             ptratio       
+##  Min.   :-1.2658   Min.   :-0.9819   Min.   :-1.3127   Min.   :-2.7047  
+##  1st Qu.:-0.8049   1st Qu.:-0.6373   1st Qu.:-0.7668   1st Qu.:-0.4876  
+##  Median :-0.2790   Median :-0.5225   Median :-0.4642   Median : 0.2746  
+##  Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.0000  
+##  3rd Qu.: 0.6617   3rd Qu.: 1.6596   3rd Qu.: 1.5294   3rd Qu.: 0.8058  
+##  Max.   : 3.9566   Max.   : 1.6596   Max.   : 1.7964   Max.   : 1.6372  
+##      black             lstat              medv        
+##  Min.   :-3.9033   Min.   :-1.5296   Min.   :-1.9063  
+##  1st Qu.: 0.2049   1st Qu.:-0.7986   1st Qu.:-0.5989  
+##  Median : 0.3808   Median :-0.1811   Median :-0.1449  
+##  Mean   : 0.0000   Mean   : 0.0000   Mean   : 0.0000  
+##  3rd Qu.: 0.4332   3rd Qu.: 0.6024   3rd Qu.: 0.2683  
+##  Max.   : 0.4406   Max.   : 3.5453   Max.   : 2.9865</code></pre>
+<p>Scaling the data affected in the level of the variables; now every variable has the mean of 0. Thus they all vary in both sides of the same mean value.</p>
+<p>Next we are going to create a categorical variable of the variable “crim” in our scaled data. This is done by using the quantiles as the break points in the categorical variable.</p>
+<pre class="r"><code>summary(boston_scaled$crim)</code></pre>
+<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+## -0.419400 -0.410600 -0.390300  0.000000  0.007389  9.924000</code></pre>
 </div>
 
 

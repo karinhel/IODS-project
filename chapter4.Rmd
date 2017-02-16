@@ -1,0 +1,83 @@
+
+# Chapter 4 - Clustering and classification
+
+
+In this chapter we are going to explore one of R's own data "Boston" of the package MASS. The dataset covers many housing-related topics such as crime rate, taxes, race and pupil-teacher ratio. The primary units of the data are the suburbs of Boston.
+
+First, let's discover the structure of the data. 
+
+```{r, include=FALSE}
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(MASS)
+library(GGally)
+
+```
+
+
+```{r}
+
+data("Boston")
+
+dim(Boston)
+str(Boston)
+
+pairs(Boston, col="darkorchid1")
+
+```
+
+We see that there are 506 observations of 14 variables that are mostly numerical. Scatterplots of every variable pair of the data can be seen in the pairs-plot. It is clearly visible that only the variable "chas" is dichotomous with values 0 and 1. The inside pairs correlations or connections differ quite much from each other.
+
+
+The variable "crim" describes the per capita crime rate by town. Below the summary shows that the crime rate has a large variance. Maybe a better picture of the structure of it we get from the graphical performance. In the scatterplot we have the crime rate on y-axis and it is compared to the median value of owner-occupied homes, variable "medv" in the data. The maximum value of crime rate (88.98) seems to be an outlier better than descriptive data point, because most of the observations are from 0 to about 25. There is some linearity between the home median value and crime rate, but not at the maximum point. It is interesting that when "medv" has it's max value (50), suddenly crime rate gets also increased values. This would mean that in the towns where median value of owner-occupied homes is $50 000, the per capita crime rate is higher than for lower median values between 30 and >50.
+
+```{r}
+summary(Boston$medv)
+summary(Boston$crim)
+
+
+p <- ggplot(Boston, aes(x=medv, y=crim)) + geom_point(col="darkorchid1") + ylab("Crime rate per capita") + xlab("Median value of owner-occupied homes in $1000s") + ggtitle("Scatterplot of crime rate")
+p + theme_bw()
+
+```
+
+
+Before linear discriminant analysis we must scale the data and divide it to two subsets; test set and analysis set.
+
+```{r}
+boston_scaled <- scale(Boston)
+boston_scaled <- as.data.frame(boston_scaled)
+
+summary(boston_scaled)
+
+```
+
+Scaling the data affected in the level of the variables; now every variable has the mean of 0. Thus they all vary in both sides of the same mean value.
+
+Next we are going to create a categorical variable of the variable "crim" in our scaled data. This is done by using the quantiles as the break points in the categorical variable.
+
+```{r}
+summary(boston_scaled$crim)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
