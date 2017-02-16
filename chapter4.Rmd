@@ -154,7 +154,7 @@ The cross tabulation shows that a large fraction of the observations have been p
 
 
 We can now move on to the most interesting part of the chapter, K-means clustering.
-For this we reload the Boston dataset and standardize it. After that we can calculate distance measures using the euclidian and manhattan distance.
+For this we reload the Boston dataset and standardize it. After that we can calculate distance measures using the euklidean and manhattan distance.
 
 ```{r}
 data("Boston")
@@ -162,7 +162,7 @@ data("Boston")
 boston_stand <- scale(Boston)
 boston_stand <- as.data.frame(boston_stand)
 
-# Euckledian distance
+# Euklidean distance
 dist_eu <- dist(boston_stand)
 summary(dist_eu)
 # Manhattan distance
@@ -171,7 +171,7 @@ summary(dist_man)
 
 ```
 
-Using the euclidian distance measure we run the k-means clustering algorithm on the data. To find the optimal number of clusters we can investigate the within cluster sum of squares (WCSS) measure by drawing a plot of the total WCSS values for each number of clusters.
+Using the euklidean distance measure we run the k-means clustering algorithm on the data. To find the optimal number of clusters we can investigate the within cluster sum of squares (WCSS) measure by drawing a plot of the total WCSS values for each number of clusters.
 
 ```{r}
 set.seed(123)
@@ -187,17 +187,17 @@ axis(1, at=1:10)
 km <-kmeans(dist_eu, centers = 4)
 ```
 
-We find that the most radical change in WCSS is when there are 2 or 3 clusters. So we will try K-means with 2 and 3 centers.
+We find that the most radical change in WCSS is when there are 2 clusters. So we will try K-means with 2 centers.
 
 ```{r}
 km1 <-kmeans(dist_eu, centers = 2)
-km2 <-kmeans(dist_eu, centers = 3)
+
 ```
 
-Last, we can visualize the clusters.
+Last, we can visualize the clusters, here is the graph for 3 clusters.
 
 ```{r}
-pairs(boston_stand, col=km1$cluster)
+pairs(boston_stand, col=rainbow(4, start = 0.7, end = 0.9)[km1$cluster])
 ```
 
 
