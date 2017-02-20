@@ -1,6 +1,7 @@
 
 # Data wranling
-#     for datas "Human development" and "Gender inequality" 
+#     for datas "Human development" and "Gender inequality"
+#     http://hdr.undp.org/en/content/human-development-index-hdi
 
 #NAME: Karin Helander
 #DATE: 16.02.17
@@ -77,7 +78,90 @@ write.csv(human, file="human.csv")
 
 read.csv("human")
 
-# Worked so wrangling finished :)
+# Worked :)
+
+
+
+
+###################################################################################################
+################################
+
+#EXC 5
+##  Data wrangling continues!  ##
+
+
+human <- read.csv("human.csv")
+str(human)
+
+# Why do I have a variable X here? Let's remove it and also mutate the data so that 
+# we transform the GNI variable to numeric.
+
+human <- dplyr::select(human, -X)
+
+colnames(human) #worked!
+
+library(stringr)
+
+as.numeric(human$GNI_Cap)
+
+str(human)
+
+
+## Next, excluding unneeded variables  ##
+
+keep_columns <- c("Country", "Edu2_Ratio", "Lab_Ratio", "Exp_education_years", 
+                  "Life_Expectancy", "GNI_Cap", "Mat.mor_Ratio", "Birth_Rate", "Parlament.rep_.")
+
+human <- select(human, one_of(keep_columns))
+#Checking..
+str(human)  #Worked!
+
+
+## Removing rows with missing values;   ##
+
+# a completeness indicator
+comp <- complete.cases(human)
+
+# adding completeness indicator to the data as the last column
+data.frame(human[-1], comp = complete.cases(human))
+
+# filtering out all rows with NA values
+human2 <- filter(human, comp==T)
+
+human2
+
+
+## Next, removing the "wrong" observations    ##
+
+# We take a look at the Country variable to find other observations than countries
+tail(human$Country, 10)
+
+# We then define the last seven indices we want to keep
+last <- nrow(human) - 7
+
+# choose everything until the last 7 observations
+human <- human[1:last,]
+
+
+## adding countries as rownames   ##
+
+rownames(human2) <- human2$Country
+
+#Removing Country variable
+
+human2 <- dplyr::select(human2, -Country)
+
+str(human2)
+# The data has now 155observations and 8 variables, because the Country variable
+#                                           is no longer included in the dataset
+
+
+##  Finally saving the data   ##
+
+write.csv(human2, file="human.csv", row.names = T)
+
+
+
 
 
 
