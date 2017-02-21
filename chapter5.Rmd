@@ -4,7 +4,7 @@
 
 * Part 1 - the "Human" data
 
-We will start working by opening the data that has been wrangleg before. The dataset has 155 observations of 8 variables. It considers education, life expectation, labour force participation and so on in different countries in the world.
+We will start working by opening the data that has been wrangled before for analysis purposes. The dataset has 155 observations of 8 variables. It considers education, life expectation, labour force participation and parliamentary representation in different countries in the world.
 
 
 ```{r, echo=FALSE}
@@ -19,27 +19,42 @@ str(human)
 library(ggplot2)
 library(GGally)
 
-ggpairs(human)
 summary(human)
+
+p <- ggpairs(human, mapping = aes(col="deeppink2", alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
+
+p
+
+```
+
+In the plot we see different kind of correlations, probably the 'GNI' variable is most correlated with all of the other variables. On the other hand, the 'Parli.F' variable, that is the representation in parliament does correlate the least with other factors.
+
+Let's study the relation between Gross National Income per capita and maternal mortality. From the ggpairs-plot we see that the correlation between these variables in question is around -0.4, which is a remarkable negative correlation.
+
+```{r}
+p2 <- ggplot(human, aes(x=GNI, y= Mat.Mor)) + geom_point(col="deeppink2")
+
+p2
 
 ```
 
 
-Describe and interpret the outputs, commenting on the distributions of the variables and the relationships between them
-
+The scatterplot shows that when GNI is low, the maternal mortality is much higher than with greater values of GNI. This makes sense, because maternal mortality is known to be approximately zero in any welfare state.
 
 Next we will perform a principal component analysis.
 
-```{r}
-# perform principal component analysis (with the SVD method)
+
+```{r, warning=FALSE}
+
 pca_human <- prcomp(human)
 
-# draw a biplot of the principal component representation and the original variables
-biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+biplot(pca_human, choices = 1:2, cex = c(0.5, 1), col = c("grey40", "deeppink2"))
 
 ```
 
-In the biplot nearly all of the observations are in the corner on the right. The plot is hard to interpret because the arrows and observations cannot be seen clearly. Better results will probably occur after standardising the data, so let's do the standardization next.
+
+In the biplot nearly all of the observations are in the corner on the right. The plot is hard to interpret because the arrows and observations cannot be seen clearly. There is no visible correlation between the features and principal components. Better results will probably occur after standardising the data, so let's do the standardization next.
+
 
 ```{r}
 
@@ -48,33 +63,36 @@ human_std <- scale(human)
 ```
 
 
+Now we can perform the principal component analysis with the standardized 'human' data.
 
-Next we will perform a principal component analysis with the standardized 'human' data.
 
 ```{r}
 # perform principal component analysis (with the SVD method)
 pca_human2 <- prcomp(human_std)
 
+summary(pca_human2)
+
 # draw a biplot of the principal component representation and the original variables
-biplot(pca_human2, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+biplot(pca_human2, choices = 1:2, cex = c(0.6, 1.2), col = c("grey40", "deeppink2"), main="Biplot of the first two principal components for the 'human' data", xlab="PC1 (54%)", ylab="PC2 (16%)")
 
 ```
 
-This biplot is much more informatic, as the observations are clearer and the arrows now show the relationships between the variables in the dataset.
+This biplot is much more informatic, as the observations are clearer and the arrows now show the relationships between the variables in the dataset. This is due to the standardation which have made the variances of the variables more comparable. The PCA procedure assumes a feature with a large variance to be more important than one with a small variance, regardless of the scaling of features. If the data is not standardized, the comparison will probably become biased due to the non-similar scaling.
 
-Interpret the results of both analysis (with and without standardizing). Are the results different? Why or why not? Include captions in you plots where you describe the results by using not just your variable names, but the actual phenomenons they relate to.
+The summary of the PCA tells that PC1 has nearly 54% of the variance of the data and the second PC2 has just 16%. Together they have around 70% of the variance of the features, so there is a good reason to use only these first two PC's in the biplot and analysis.
 
+The biplot above shows that there are three groups of higher variable correlation. As we look at the arrows, we find that there is a higher correlation between 'Parli.F' & 'Labo.FM', 'Mat.Mor' & 'Ado.Birth' and thirdly the rest of the original features. It seems that the first and the last group contibutes to PC1 and the second group of features have a higher correlation with the PC2.
 
-
-Give your personal interpretations of the first two principal component dimensions based on the biplot drawn after PCA on the standardized human data
 
 
 -------
+
 
 * Part 2 - the "tea" data from package FactoMineR
 
 
 Let's first install the package and data in question.
+
 
 ```{r}
 library(FactoMineR)
@@ -89,15 +107,101 @@ dim(tea)
 str(tea)
 ```
 
-There are 300 observations of 36 variables in the data and it describes tea drinking.
 
-visualize it.
+There are 300 observations of 36 variables in the data, which in general describes tea drinking. Since 36 variables is quite much to handly and unnecessarily large number for a multiple correspondence analysis, we will take our own subset of the data. The picked variables can be seen at the stucture of the new dataset 'teatime' below.
 
-We will now perform a Multiple Correspondence Analysis on the tea data (or to a certain columns of the data, it's up to you).
+
+```{r, include=F}
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+```
+
+
+
+```{r}
+library(dplyr)
+
+keep <- c("breakfast", "Tea", "How", "age", "frequency")
+
+teatime <- select(tea, one_of(keep))
+
+str(teatime)
+
+g1 <- ggplot(teatime, aes(breakfast)) + geom_bar() + theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+g2 <- ggplot(teatime, aes(Tea)) + geom_bar()+ theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+g3 <- ggplot(teatime, aes(How)) + geom_bar()+ theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+g4 <- ggplot(teatime, aes(age)) + geom_bar()+ theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+g5 <- ggplot(teatime, aes(frequency)) + geom_bar()+ theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+
+multiplot(g1, g2, g3, g4, g5, cols=3)
+
+```
+
+
+The most, there are 20 to 30 year old earl grey drinking data points who drink tea at least twice a day. It seems that about a  drinks tea with breakfast and the other half does not.
+
+We will now perform a Multiple Correspondence Analysis (MCA) on the new dataset.
+
+
+```{r}
+# multiple correspondence analysis
+#mca <- MCA(teatime, graph = FALSE)
+
+# summary of the model
+#summary(mca)
+
+# visualize MCA
+#plot(mca, invisible=c("ind"), habillage = "quali")
+```
+
 
 Interpret the results of the MCA
 
-and draw at least the variable biplot of the analysis. You can also explore other plotting options for MCA.
+draw the variable biplot of the analysis
 
 Comment on the output of the plots
 
