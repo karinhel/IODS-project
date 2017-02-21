@@ -165,7 +165,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ```{r}
 library(dplyr)
 
-keep <- c("breakfast", "Tea", "How", "age", "frequency")
+keep <- c("breakfast", "Tea", "How", "age_Q", "frequency")
 
 teatime <- select(tea, one_of(keep))
 
@@ -174,7 +174,7 @@ str(teatime)
 g1 <- ggplot(teatime, aes(breakfast)) + geom_bar() + theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 g2 <- ggplot(teatime, aes(Tea)) + geom_bar()+ theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 g3 <- ggplot(teatime, aes(How)) + geom_bar()+ theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
-g4 <- ggplot(teatime, aes(age)) + geom_bar()+ theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+g4 <- ggplot(teatime, aes(age_Q)) + geom_bar()+ theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 g5 <- ggplot(teatime, aes(frequency)) + geom_bar()+ theme_bw() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
 
 multiplot(g1, g2, g3, g4, g5, cols=3)
@@ -182,26 +182,28 @@ multiplot(g1, g2, g3, g4, g5, cols=3)
 ```
 
 
-The most, there are 20 to 30 year old earl grey drinking data points who drink tea at least twice a day. It seems that about a  drinks tea with breakfast and the other half does not.
+The most, there are earl grey drinking respondents who drink tea at least twice a day. It seems that about half of the respondents drink tea with breakfast and the other half, on the other hand, does not. If we would take a closer look at the 'frequency' variable we should then change the order of the levels because now they do not seem to be logical. However, that is not what we are going to do right now.
 
-We will now perform a Multiple Correspondence Analysis (MCA) on the new dataset.
+Instead, we will now perform a Multiple Correspondence Analysis (MCA) on the new dataset.
 
 
 ```{r}
-# multiple correspondence analysis
-#mca <- MCA(teatime, graph = FALSE)
 
-# summary of the model
-#summary(mca)
+mca <- MCA(X = teatime, graph=F)
 
-# visualize MCA
-#plot(mca, invisible=c("ind"), habillage = "quali")
+summary(mca)
 ```
 
 
 Interpret the results of the MCA
 
-draw the variable biplot of the analysis
+A graphical overview is performed by the MCA factor map below.
+
+```{r}
+plot(mca, invisible=c("ind"), habillage = "quali")
+
+```
+
 
 Comment on the output of the plots
 
