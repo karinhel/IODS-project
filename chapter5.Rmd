@@ -2,6 +2,13 @@
 # Chapter 5 - Dimensionality reduction techniques
 
 
+```{r, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(GGally)
+library(FactoMineR)
+```
+
 * Part 1 - the "Human" data
 
 We will start working by opening the data that has been wrangled before for analysis purposes. The dataset has 155 observations of 8 variables. It considers education, life expectation, labour force participation and parliamentary representation in different countries in the world.
@@ -72,7 +79,6 @@ pca_human2 <- prcomp(human_std)
 
 summary(pca_human2)
 
-# draw a biplot of the principal component representation and the original variables
 biplot(pca_human2, choices = 1:2, cex = c(0.6, 1.2), col = c("grey40", "deeppink2"), main="Biplot of the first two principal components for the 'human' data", xlab="PC1 (54%)", ylab="PC2 (16%)")
 
 ```

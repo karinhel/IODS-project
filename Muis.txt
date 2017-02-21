@@ -1,0 +1,25 @@
+PCA
+
+- to find most essential dimensions in the data
+	(idea of dimensionality reduction in general)
+
+- variance of the pca components will account for
+	most of the variance of the data or variables in q.
+
+- singular value decomposition (SVD) most important tool
+	for dimension reduction
+	
+	-> PCA is a procedure using svd
+
+- 1. PCA captures the max amount of variance
+- 2. PCA captures max of variance left		and so on
+
+- PCA's assumption: feature with a large variance is more
+	important than one with a small variance
+
+	--> standardization!!
+	--> then comparison of features makes sense
+
+- Biplot -> 1) observations
+	 -> 2) features with their and pc's relationships
+
