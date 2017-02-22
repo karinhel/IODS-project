@@ -169,11 +169,10 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 
 ```{r}
-library(dplyr)
 
 keep <- c("breakfast", "Tea", "How", "age_Q", "frequency")
 
-teatime <- select(tea, one_of(keep))
+teatime <- dplyr::select(tea, one_of(keep))
 
 str(teatime)
 
