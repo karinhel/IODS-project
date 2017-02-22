@@ -23,3 +23,13 @@ PCA
 - Biplot -> 1) observations
 	 -> 2) features with their and pc's relationships
 
+
+MCA
+
+- categorical data
+- MCA biplot = facter map of MCA
+
+
+
+
+
