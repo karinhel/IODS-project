@@ -199,18 +199,15 @@ mca <- MCA(X = teatime, graph=F)
 summary(mca)
 ```
 
-
-Interpret the results of the MCA
+The output of MCA gives us Eigenvalues, values for individuals and categories. In the output, at the Categories table there are the v.test values. A v-test value is +/-1.96 if the coordinate in question is significantly different from zero. There are only a few coordinates less than |1.96|, so nearly all of them are significant.
 
 A graphical overview is performed by the MCA factor map below.
 
 ```{r}
 plot(mca, invisible=c("ind"), habillage = "quali")
-
 ```
 
-
-Comment on the output of the plots
+This MCA biplot gives us a good overview of the similarity of the categories on the first two dimensions. The only outstanding category is the 'other' value of the variable 'How'. We find that the categories '15-24' and '25-34' (years) are really close to 'Earl Grey' while older age categories are closer to 'Black'. So maybe the younger respondents prefer earl grey tea to other options. It is also interesting that categories 'Not.breakfast' and 'green' are close to each other, because this indicates that those not drinking tea for breakfast prefer green tea.
 
 
 
